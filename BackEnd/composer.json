@@ -5,6 +5,7 @@
         "php": "^7.1.23",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "api-platform/api-pack": "^1.2",
         "friendsofsymfony/rest-bundle": "^2.5",
         "jms/serializer-bundle": "^2.4",
         "nelmio/api-doc-bundle": "^3.4",
