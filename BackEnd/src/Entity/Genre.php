@@ -2,11 +2,14 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
- * @ApiResource
+ * @ApiResource()
+ * @ApiFilter(SearchFilter::class, properties={"id_anime": "exact"})
  * @ORM\Entity(repositoryClass="App\Repository\GenreRepository")
  */
 class Genre
@@ -25,10 +28,10 @@ class Genre
     private $id_anime;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\GenreList")
+     * @ORM\ManyToOne(targetEntity="App\Entity\GenreList", inversedBy="genres")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $id_genre;
+    private $id_genreList;
 
     public function getId(): ?int
     {
@@ -47,14 +50,14 @@ class Genre
         return $this;
     }
 
-    public function getIdGenre(): ?GenreList
+    public function getIdGenreList(): ?GenreList
     {
-        return $this->id_genre;
+        return $this->id_genreList;
     }
 
-    public function setIdGenre(?GenreList $id_genre): self
+    public function setIdGenreList(?GenreList $id_genreList): self
     {
-        $this->id_genre = $id_genre;
+        $this->id_genreList = $id_genreList;
 
         return $this;
     }

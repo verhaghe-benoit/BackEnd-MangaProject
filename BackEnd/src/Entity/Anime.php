@@ -51,9 +51,20 @@ class Anime
     private $synopsisEN;
 
     /**
+     * @ORM\Column(type="string", length=300, nullable=true)
+     */
+    private $img;
+
+    /**
+     * @ORM\Column(type="string", length=300, nullable=true)
+     */
+    private $imgRow;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Genre", mappedBy="id_anime")
      */
     private $genres;
+
 
     public function __construct()
     {
@@ -167,4 +178,5 @@ class Anime
 
         return $this;
     }
+
 }

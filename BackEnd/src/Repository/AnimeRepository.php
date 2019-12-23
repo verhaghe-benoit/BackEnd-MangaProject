@@ -47,4 +47,21 @@ class AnimeRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findGenreName($id_anime): array
+{
+    $conn = $this->getEntityManager()->getConnection();
+
+    $sql = '
+        SELECT genre FROM genre_list gl
+        INNER JOIN genre ON gl.id = genre.id_genre_list_id 
+        INNER JOIN anime ON genre.id_anime_id = anime.id
+        WHERE anime.id = :id_anime
+        ';
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+
+    // returns an array of arrays (i.e. a raw data set)
+    return $stmt->fetchAll();
+}
 }
