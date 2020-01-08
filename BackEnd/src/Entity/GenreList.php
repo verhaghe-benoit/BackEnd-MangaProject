@@ -6,9 +6,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource
+ * @ApiResource()
  * @ORM\Entity(repositoryClass="App\Repository\GenreListRepository")
  */
 class GenreList
@@ -22,17 +23,19 @@ class GenreList
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read", "write"})
      */
     private $genre;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Genre", mappedBy="id_genreList")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Anime", inversedBy="genreLists")
      */
-    private $genres;
+    private $animes;
+
 
     public function __construct()
     {
-        $this->genres = new ArrayCollection();
+        $this->animes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -53,31 +56,26 @@ class GenreList
     }
 
     /**
-     * @return Collection|Genre[]
+     * @return Collection|Anime[]
      */
-    public function getGenres(): Collection
+    public function getAnimes(): Collection
     {
-        return $this->genres;
+        return $this->animes;
     }
 
-    public function addGenre(Genre $genre): self
+    public function addAnime(Anime $anime): self
     {
-        if (!$this->genres->contains($genre)) {
-            $this->genres[] = $genre;
-            $genre->setIdGenreList($this);
+        if (!$this->animes->contains($anime)) {
+            $this->animes[] = $anime;
         }
 
         return $this;
     }
 
-    public function removeGenre(Genre $genre): self
+    public function removeAnime(Anime $anime): self
     {
-        if ($this->genres->contains($genre)) {
-            $this->genres->removeElement($genre);
-            // set the owning side to null (unless already changed)
-            if ($genre->getIdGenreList() === $this) {
-                $genre->setIdGenreList(null);
-            }
+        if ($this->animes->contains($anime)) {
+            $this->animes->removeElement($anime);
         }
 
         return $this;

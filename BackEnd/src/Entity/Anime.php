@@ -6,9 +6,16 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource
+ * @ApiResource(
+ *     normalizationContext={"groups"={"read"}},
+ *     denormalizationContext={"groups"={"write"}}
+ * )
+ * @ApiFilter(SearchFilter::class, properties={"genreLists.genre": "exact"})
  * @ORM\Entity(repositoryClass="App\Repository\AnimeRepository")
  */
 class Anime
@@ -22,53 +29,62 @@ class Anime
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read", "write"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"read", "write"})
      */
     private $score;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"read", "write"})
      */
     private $episodes;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read", "write"})
      */
     private $status;
 
     /**
      * @ORM\Column(type="string", length=5000, nullable=true)
+     * @Groups({"read", "write"})
      */
     private $synopsisFR;
 
     /**
      * @ORM\Column(type="string", length=5000, nullable=true)
+     * @Groups({"read", "write"})
      */
     private $synopsisEN;
 
     /**
      * @ORM\Column(type="string", length=300, nullable=true)
+     * @Groups({"read", "write"})
      */
     private $img;
 
     /**
      * @ORM\Column(type="string", length=300, nullable=true)
+     * @Groups({"read", "write"})
      */
     private $imgRow;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Genre", mappedBy="id_anime")
+     * @ORM\ManyToMany(targetEntity="App\Entity\GenreList", mappedBy="animes")
+     * @Groups({"read", "write"})
      */
-    private $genres;
+    private $genreLists;
 
 
     public function __construct()
     {
-        $this->genres = new ArrayCollection();
+        $this->genreLists = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -149,34 +165,30 @@ class Anime
     }
 
     /**
-     * @return Collection|Genre[]
+     * @return Collection|GenreList[]
      */
-    public function getGenres(): Collection
+    public function getGenreLists(): Collection
     {
-        return $this->genres;
+        return $this->genreLists;
     }
 
-    public function addGenre(Genre $genre): self
+    public function addGenreList(GenreList $genreList): self
     {
-        if (!$this->genres->contains($genre)) {
-            $this->genres[] = $genre;
-            $genre->setIdAnime($this);
+        if (!$this->genreLists->contains($genreList)) {
+            $this->genreLists[] = $genreList;
+            $genreList->addAnime($this);
         }
 
         return $this;
     }
 
-    public function removeGenre(Genre $genre): self
+    public function removeGenreList(GenreList $genreList): self
     {
-        if ($this->genres->contains($genre)) {
-            $this->genres->removeElement($genre);
-            // set the owning side to null (unless already changed)
-            if ($genre->getIdAnime() === $this) {
-                $genre->setIdAnime(null);
-            }
+        if ($this->genreLists->contains($genreList)) {
+            $this->genreLists->removeElement($genreList);
+            $genreList->removeAnime($this);
         }
 
         return $this;
     }
-
 }

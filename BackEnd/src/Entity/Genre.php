@@ -21,17 +21,6 @@ class Genre
      */
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Anime", inversedBy="genres")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $id_anime;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\GenreList", inversedBy="genres")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $id_genreList;
 
     public function getId(): ?int
     {
