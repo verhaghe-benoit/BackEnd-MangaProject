@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\OrderBy;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
@@ -24,6 +25,7 @@ class Anime
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"read", "write"})
      */
     private $id;
 
@@ -77,6 +79,7 @@ class Anime
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\GenreList", mappedBy="animes")
+     * @OrderBy({"genre" = "ASC"})
      * @Groups({"read", "write"})
      */
     private $genreLists;

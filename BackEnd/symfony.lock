@@ -146,8 +146,26 @@
             "ref": "fe60ce509ef04a3f40da96e3979bc8d9b13b2372"
         }
     },
+    "lcobucci/jwt": {
+        "version": "3.3.1"
+    },
+    "lexik/jwt-authentication-bundle": {
+        "version": "2.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "2.5",
+            "ref": "5b2157bcd5778166a5696e42f552ad36529a07a6"
+        },
+        "files": [
+            "config/packages/lexik_jwt_authentication.yaml"
+        ]
+    },
     "monolog/monolog": {
         "version": "1.25.1"
+    },
+    "namshi/jose": {
+        "version": "7.2.3"
     },
     "nelmio/api-doc-bundle": {
         "version": "3.0",
@@ -273,6 +291,9 @@
             ".env"
         ]
     },
+    "symfony/form": {
+        "version": "v4.3.9"
+    },
     "symfony/framework-bundle": {
         "version": "4.2",
         "recipe": {
@@ -300,6 +321,9 @@
     },
     "symfony/inflector": {
         "version": "v4.3.4"
+    },
+    "symfony/intl": {
+        "version": "v4.3.9"
     },
     "symfony/maker-bundle": {
         "version": "1.0",
@@ -335,6 +359,9 @@
     },
     "symfony/orm-pack": {
         "version": "v1.0.6"
+    },
+    "symfony/polyfill-intl-icu": {
+        "version": "v1.13.1"
     },
     "symfony/polyfill-intl-idn": {
         "version": "v1.12.0"

@@ -5,6 +5,9 @@ namespace App\Repository;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,9 +17,14 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  */
 class UserRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    /** EntityManager $manager */
+    private $manager;
+
+    public function __construct(RegistryInterface $registry, UserPasswordEncoderInterface $encoder)
     {
         parent::__construct($registry, User::class);
+        $this->manager = $registry->getEntityManager();
+        $this->encoder = $encoder;
     }
 
     // /**
@@ -47,4 +55,23 @@ class UserRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    /**
+     * Create a new user
+     * @param $data
+     * @return User
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+    */
+    public function createNewUser($data)
+    {
+        $user = new User();
+        $user->setEmail($data['email'])
+            ->setUsername($data['username'])
+            ->setPassword($this->encoder->encodePassword($user, $data['password']))
+            ->setConfirmPassword($this->encoder->encodePassword($user, $data['confirm_password']));
+        
+        $this->manager->persist($user);
+        $this->manager->flush();
+    }
 }
