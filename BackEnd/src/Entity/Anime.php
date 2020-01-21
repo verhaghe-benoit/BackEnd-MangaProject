@@ -10,13 +10,14 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * @ApiResource(
- *     normalizationContext={"groups"={"read"}},
+ *     normalizationContext={"groups"={"read"}, "enable_max_depth"="true"},
  *     denormalizationContext={"groups"={"write"}}
  * )
- * @ApiFilter(SearchFilter::class, properties={"genreLists.genre": "exact"})
+ * @ApiFilter(SearchFilter::class, properties={"genreLists.genre" : "exact","title" : "partial"})
  * @ORM\Entity(repositoryClass="App\Repository\AnimeRepository")
  */
 class Anime
@@ -34,13 +35,7 @@ class Anime
      * @Groups({"read", "write"})
      */
     private $title;
-
-    /**
-     * @ORM\Column(type="float")
-     * @Groups({"read", "write"})
-     */
-    private $score;
-
+    
     /**
      * @ORM\Column(type="float")
      * @Groups({"read", "write"})
@@ -84,10 +79,20 @@ class Anime
      */
     private $genreLists;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ScoreRelation", mappedBy="anime")
+     * @Groups({"read"})
+     * @MaxDepth(1)
+     */
+    private $scoreRelations;
+
+    private $score;
+
 
     public function __construct()
     {
         $this->genreLists = new ArrayCollection();
+        $this->scoreRelations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -103,18 +108,6 @@ class Anime
     public function setTitle(string $title): self
     {
         $this->title = $title;
-
-        return $this;
-    }
-
-    public function getScore(): ?float
-    {
-        return $this->score;
-    }
-
-    public function setScore(float $score): self
-    {
-        $this->score = $score;
 
         return $this;
     }
@@ -190,6 +183,37 @@ class Anime
         if ($this->genreLists->contains($genreList)) {
             $this->genreLists->removeElement($genreList);
             $genreList->removeAnime($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ScoreRelation[]
+     */
+    public function getScoreRelations(): Collection
+    {
+        return $this->scoreRelations;
+    }
+
+    public function addScoreRelation(ScoreRelation $scoreRelation): self
+    {
+        if (!$this->scoreRelations->contains($scoreRelation)) {
+            $this->scoreRelations[] = $scoreRelation;
+            $scoreRelation->setAnime($this);
+        }
+
+        return $this;
+    }
+
+    public function removeScoreRelation(ScoreRelation $scoreRelation): self
+    {
+        if ($this->scoreRelations->contains($scoreRelation)) {
+            $this->scoreRelations->removeElement($scoreRelation);
+            // set the owning side to null (unless already changed)
+            if ($scoreRelation->getAnime() === $this) {
+                $scoreRelation->setAnime(null);
+            }
         }
 
         return $this;

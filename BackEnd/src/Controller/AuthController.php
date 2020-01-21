@@ -36,7 +36,6 @@ class AuthController extends AbstractController
         $this->userRepository->createNewUser($user);        
 
         $response = new Response();
-        $response->setContent("New user created");
         $response->headers->set('Access-Control-Allow-Origin','*');
 
         
