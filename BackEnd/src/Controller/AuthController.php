@@ -7,6 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class AuthController extends AbstractController
 {
@@ -40,14 +41,5 @@ class AuthController extends AbstractController
 
         
         return $response;
-    }
-
-    /**
-    * api route redirects
-    * @return Response
-    */
-    public function api()
-    {
-        return new Response(sprintf("Logged in as %s", $this->getUser()->getUsername()));
     }
 }

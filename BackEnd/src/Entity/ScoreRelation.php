@@ -37,10 +37,16 @@ class ScoreRelation
     private $anime;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="float", nullable=true)
      * @Groups({"read", "write"})
      */
     private $score;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"read", "write"})
+     */
+    private $status;
 
     public function getId(): ?int
     {
@@ -79,6 +85,18 @@ class ScoreRelation
     public function setScore(float $score): self
     {
         $this->score = $score;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

@@ -17,7 +17,7 @@ use Symfony\Component\Serializer\Annotation\MaxDepth;
  *     normalizationContext={"groups"={"read"}, "enable_max_depth"="true"},
  *     denormalizationContext={"groups"={"write"}}
  * )
- * @ApiFilter(SearchFilter::class, properties={"genreLists.genre" : "exact","title" : "partial"})
+ * @ApiFilter(SearchFilter::class, properties={"genreLists.genre" : "exact","title" : "partial","status" : "exact"})
  * @ORM\Entity(repositoryClass="App\Repository\AnimeRepository")
  */
 class Anime

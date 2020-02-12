@@ -32,6 +32,12 @@ class GenreList
      */
     private $animes;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups({"read", "write"})
+     */
+    private $color;
+
 
     public function __construct()
     {
@@ -77,6 +83,18 @@ class GenreList
         if ($this->animes->contains($anime)) {
             $this->animes->removeElement($anime);
         }
+
+        return $this;
+    }
+
+    public function getColor(): ?string
+    {
+        return $this->color;
+    }
+
+    public function setColor(string $color): self
+    {
+        $this->color = $color;
 
         return $this;
     }
