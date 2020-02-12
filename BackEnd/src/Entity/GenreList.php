@@ -38,10 +38,16 @@ class GenreList
      */
     private $color;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Manga", mappedBy="genreLists")
+     */
+    private $mangas;
+
 
     public function __construct()
     {
         $this->animes = new ArrayCollection();
+        $this->mangas = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -95,6 +101,34 @@ class GenreList
     public function setColor(string $color): self
     {
         $this->color = $color;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Manga[]
+     */
+    public function getMangas(): Collection
+    {
+        return $this->mangas;
+    }
+
+    public function addManga(Manga $manga): self
+    {
+        if (!$this->mangas->contains($manga)) {
+            $this->mangas[] = $manga;
+            $manga->addGenreList($this);
+        }
+
+        return $this;
+    }
+
+    public function removeManga(Manga $manga): self
+    {
+        if ($this->mangas->contains($manga)) {
+            $this->mangas->removeElement($manga);
+            $manga->removeGenreList($this);
+        }
 
         return $this;
     }
