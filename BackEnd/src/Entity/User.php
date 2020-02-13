@@ -62,11 +62,17 @@ class User implements UserInterface
      */
     private $scoreRelations;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ScoreRelationManga", mappedBy="user")
+     */
+    private $scoreRelationMangas;
+
 
     public function __construct()
     {
         $this->animes = new ArrayCollection();
         $this->scoreRelations = new ArrayCollection();
+        $this->scoreRelationMangas = new ArrayCollection();
     }
 
     public function getRoles(){
@@ -161,6 +167,37 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($scoreRelation->getUser() === $this) {
                 $scoreRelation->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ScoreRelationManga[]
+     */
+    public function getScoreRelationMangas(): Collection
+    {
+        return $this->scoreRelationMangas;
+    }
+
+    public function addScoreRelationManga(ScoreRelationManga $scoreRelationManga): self
+    {
+        if (!$this->scoreRelationMangas->contains($scoreRelationManga)) {
+            $this->scoreRelationMangas[] = $scoreRelationManga;
+            $scoreRelationManga->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeScoreRelationManga(ScoreRelationManga $scoreRelationManga): self
+    {
+        if ($this->scoreRelationMangas->contains($scoreRelationManga)) {
+            $this->scoreRelationMangas->removeElement($scoreRelationManga);
+            // set the owning side to null (unless already changed)
+            if ($scoreRelationManga->getUser() === $this) {
+                $scoreRelationManga->setUser(null);
             }
         }
 
