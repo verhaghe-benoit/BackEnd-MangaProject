@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\OrderBy;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
@@ -18,6 +19,7 @@ use Symfony\Component\Serializer\Annotation\MaxDepth;
  *     denormalizationContext={"groups"={"write"}}
  * )
  * @ApiFilter(SearchFilter::class, properties={"genreLists.genre" : "exact","title" : "partial","status" : "exact"})
+ * @ApiFilter(OrderFilter::class, properties={"title": "ASC"})
  * @ORM\Entity(repositoryClass="App\Repository\AnimeRepository")
  */
 class Anime
