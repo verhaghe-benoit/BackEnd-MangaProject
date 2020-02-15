@@ -8,3 +8,8 @@ api_platform:
     collection:
         pagination:
             enabled: false
+    eager_loading:
+        enabled: true
+        fetch_partial: false
+        max_joins: 4
+        force_eager: true

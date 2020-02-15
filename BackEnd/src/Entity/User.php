@@ -27,6 +27,7 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"read_user", "write_user"}))
      */
     private $id;
 
@@ -64,8 +65,15 @@ class User implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\ScoreRelationManga", mappedBy="user")
+     * @MaxDepth(1)
      */
     private $scoreRelationMangas;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\CommentsAnimes", mappedBy="user")
+     * @MaxDepth(1)
+     */
+    private $commentsAnimes;
 
 
     public function __construct()
@@ -73,6 +81,7 @@ class User implements UserInterface
         $this->animes = new ArrayCollection();
         $this->scoreRelations = new ArrayCollection();
         $this->scoreRelationMangas = new ArrayCollection();
+        $this->commentsAnimes = new ArrayCollection();
     }
 
     public function getRoles(){
@@ -198,6 +207,37 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($scoreRelationManga->getUser() === $this) {
                 $scoreRelationManga->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CommentsAnimes[]
+     */
+    public function getCommentsAnimes(): Collection
+    {
+        return $this->commentsAnimes;
+    }
+
+    public function addCommentsAnime(CommentsAnimes $commentsAnime): self
+    {
+        if (!$this->commentsAnimes->contains($commentsAnime)) {
+            $this->commentsAnimes[] = $commentsAnime;
+            $commentsAnime->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentsAnime(CommentsAnimes $commentsAnime): self
+    {
+        if ($this->commentsAnimes->contains($commentsAnime)) {
+            $this->commentsAnimes->removeElement($commentsAnime);
+            // set the owning side to null (unless already changed)
+            if ($commentsAnime->getUser() === $this) {
+                $commentsAnime->setUser(null);
             }
         }
 

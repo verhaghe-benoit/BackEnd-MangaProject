@@ -90,11 +90,19 @@ class Anime
 
     private $score;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\CommentsAnimes", mappedBy="anime")
+     * @Groups({"read", "write"})
+     * @MaxDepth(1)
+     */
+    private $commentsAnimes;
+
 
     public function __construct()
     {
         $this->genreLists = new ArrayCollection();
         $this->scoreRelations = new ArrayCollection();
+        $this->commentsAnimes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -215,6 +223,37 @@ class Anime
             // set the owning side to null (unless already changed)
             if ($scoreRelation->getAnime() === $this) {
                 $scoreRelation->setAnime(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CommentsAnimes[]
+     */
+    public function getCommentsAnimes(): Collection
+    {
+        return $this->commentsAnimes;
+    }
+
+    public function addCommentsAnime(CommentsAnimes $commentsAnime): self
+    {
+        if (!$this->commentsAnimes->contains($commentsAnime)) {
+            $this->commentsAnimes[] = $commentsAnime;
+            $commentsAnime->setAnime($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentsAnime(CommentsAnimes $commentsAnime): self
+    {
+        if ($this->commentsAnimes->contains($commentsAnime)) {
+            $this->commentsAnimes->removeElement($commentsAnime);
+            // set the owning side to null (unless already changed)
+            if ($commentsAnime->getAnime() === $this) {
+                $commentsAnime->setAnime(null);
             }
         }
 
