@@ -33,7 +33,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
-     * @Groups({"read_user", "write_user"})
+     * @Groups({"read", "write_user"})
      */
     private $username;
 

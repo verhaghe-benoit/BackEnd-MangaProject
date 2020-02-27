@@ -92,6 +92,7 @@ class Anime
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\CommentsAnimes", mappedBy="anime")
+     * @OrderBy({"date" = "DESC"})
      * @Groups({"read", "write"})
      * @MaxDepth(1)
      */

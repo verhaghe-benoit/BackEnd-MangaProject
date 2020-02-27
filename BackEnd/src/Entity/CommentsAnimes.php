@@ -27,6 +27,7 @@ class CommentsAnimes
      * @ORM\ManyToOne(targetEntity="App\Entity\Anime", inversedBy="commentsAnimes")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"read", "write"})
+     * @MaxDepth(1)
      */
     private $anime;
 
@@ -34,6 +35,7 @@ class CommentsAnimes
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="commentsAnimes")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"read", "write"})
+     * @MaxDepth(1)
      */
     private $user;
 
