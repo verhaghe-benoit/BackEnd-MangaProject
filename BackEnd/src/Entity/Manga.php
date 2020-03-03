@@ -82,10 +82,18 @@ class Manga
 
     private $score;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\CommentsMangas", mappedBy="manga")
+     * @OrderBy({"date" = "DESC"})
+     * @Groups({"read_manga"})
+     */
+    private $commentsMangas;
+
     public function __construct()
     {
         $this->genreLists = new ArrayCollection();
         $this->scoreRelationMangas = new ArrayCollection();
+        $this->commentsMangas = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -216,6 +224,37 @@ class Manga
             // set the owning side to null (unless already changed)
             if ($scoreRelationManga->getManga() === $this) {
                 $scoreRelationManga->setManga(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CommentsMangas[]
+     */
+    public function getCommentsMangas(): Collection
+    {
+        return $this->commentsMangas;
+    }
+
+    public function addCommentsManga(CommentsMangas $commentsManga): self
+    {
+        if (!$this->commentsMangas->contains($commentsManga)) {
+            $this->commentsMangas[] = $commentsManga;
+            $commentsManga->setManga($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentsManga(CommentsMangas $commentsManga): self
+    {
+        if ($this->commentsMangas->contains($commentsManga)) {
+            $this->commentsMangas->removeElement($commentsManga);
+            // set the owning side to null (unless already changed)
+            if ($commentsManga->getManga() === $this) {
+                $commentsManga->setManga(null);
             }
         }
 

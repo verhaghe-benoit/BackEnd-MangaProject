@@ -15,7 +15,7 @@ use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  ** @ApiResource(
- *     normalizationContext={"groups"={"read_user","read"},"enable_max_depth"="true"},
+ *     normalizationContext={"groups"={"read_user","read","read_manga"},"enable_max_depth"="true"},
  *     denormalizationContext={"groups"={"write_user"}}
  * )
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -33,7 +33,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
-     * @Groups({"read", "write_user"})
+     * @Groups({"read", "write_user","read_manga"})
      */
     private $username;
 
@@ -75,6 +75,11 @@ class User implements UserInterface
      */
     private $commentsAnimes;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\CommentsMangas", mappedBy="user")
+     */
+    private $commentsMangas;
+
 
     public function __construct()
     {
@@ -82,6 +87,7 @@ class User implements UserInterface
         $this->scoreRelations = new ArrayCollection();
         $this->scoreRelationMangas = new ArrayCollection();
         $this->commentsAnimes = new ArrayCollection();
+        $this->commentsMangas = new ArrayCollection();
     }
 
     public function getRoles(){
@@ -238,6 +244,37 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($commentsAnime->getUser() === $this) {
                 $commentsAnime->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CommentsMangas[]
+     */
+    public function getCommentsMangas(): Collection
+    {
+        return $this->commentsMangas;
+    }
+
+    public function addCommentsManga(CommentsMangas $commentsManga): self
+    {
+        if (!$this->commentsMangas->contains($commentsManga)) {
+            $this->commentsMangas[] = $commentsManga;
+            $commentsManga->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentsManga(CommentsMangas $commentsManga): self
+    {
+        if ($this->commentsMangas->contains($commentsManga)) {
+            $this->commentsMangas->removeElement($commentsManga);
+            // set the owning side to null (unless already changed)
+            if ($commentsManga->getUser() === $this) {
+                $commentsManga->setUser(null);
             }
         }
 
