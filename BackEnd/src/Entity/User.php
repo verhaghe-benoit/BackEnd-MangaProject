@@ -65,6 +65,7 @@ class User implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\ScoreRelationManga", mappedBy="user")
+     * @Groups({"read", "write"})
      * @MaxDepth(1)
      */
     private $scoreRelationMangas;
@@ -77,6 +78,7 @@ class User implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\CommentsMangas", mappedBy="user")
+     * @MaxDepth(1)
      */
     private $commentsMangas;
 
